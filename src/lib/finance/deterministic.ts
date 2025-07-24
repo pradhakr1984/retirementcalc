@@ -2,8 +2,30 @@ import { RetirementInputs } from '@/types/inputs';
 import { DeterministicResult, YearRow } from '@/types/results';
 
 export function calculateDeterministic(inputs: RetirementInputs): DeterministicResult {
-  const yearsToRetire = inputs.retireAge - inputs.currentAge;
-  const yearsInRetirement = inputs.planToAge - inputs.retireAge;
+  try {
+    // Validate critical inputs
+    if (inputs.initialWR <= 0) {
+      throw new Error('Initial withdrawal rate must be positive');
+    }
+    
+    if (inputs.currentAssets < 0) {
+      throw new Error('Current assets cannot be negative');
+    }
+    
+    if (inputs.annualSpend <= 0) {
+      throw new Error('Annual spending must be positive');
+    }
+    
+    if (inputs.retireAge <= inputs.currentAge) {
+      throw new Error('Retirement age must be after current age');
+    }
+    
+    if (inputs.planToAge <= inputs.retireAge) {
+      throw new Error('Plan to age must be after retirement age');
+    }
+    
+    const yearsToRetire = inputs.retireAge - inputs.currentAge;
+    const yearsInRetirement = inputs.planToAge - inputs.retireAge;
   
   // Calculate average annual income during retirement
   const totalIncomeYears = inputs.incomes.reduce((sum, income) => {
@@ -32,9 +54,18 @@ export function calculateDeterministic(inputs: RetirementInputs): DeterministicR
   const gapToGoal = enoughNumberToday - inputs.currentAssets;
   
   // Calculate years to financial independence
-  const yearsToFI = gapToGoal > 0 
-    ? Math.log(1 + (gapToGoal * inputs.meanReturn) / inputs.currentAssets) / Math.log(1 + inputs.meanReturn)
-    : 0;
+  let yearsToFI = 0;
+  if (gapToGoal > 0 && inputs.currentAssets > 0 && inputs.meanReturn !== 0) {
+    try {
+      yearsToFI = Math.log(1 + (gapToGoal * inputs.meanReturn) / inputs.currentAssets) / Math.log(1 + inputs.meanReturn);
+      if (!isFinite(yearsToFI)) {
+        yearsToFI = 0;
+      }
+    } catch (error) {
+      console.warn('Error calculating years to FI:', error);
+      yearsToFI = 0;
+    }
+  }
 
   // Generate year-by-year cash flow table
   const cashflowTable = generateCashflowTable(inputs);
@@ -46,6 +77,10 @@ export function calculateDeterministic(inputs: RetirementInputs): DeterministicR
     yearsToFI,
     cashflowTable,
   };
+  } catch (error) {
+    console.error('Error in deterministic calculation:', error);
+    throw error;
+  }
 }
 
 function generateCashflowTable(inputs: RetirementInputs): YearRow[] {

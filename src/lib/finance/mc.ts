@@ -7,13 +7,24 @@ export function runMonteCarloSimulation(inputs: RetirementInputs): {
   results: SimulationPathResult[];
   summary: SimulationSummary;
 } {
-  const results: SimulationPathResult[] = [];
-  const endingBalances: number[] = [];
-  let worstPathDepletionAge: number | undefined;
+  try {
+    // Validate inputs
+    if (inputs.simulations <= 0 || inputs.simulations > 10000) {
+      throw new Error('Number of simulations must be between 1 and 10,000');
+    }
+    
+    if (inputs.initialWR <= 0) {
+      throw new Error('Initial withdrawal rate must be positive');
+    }
+    
+    const results: SimulationPathResult[] = [];
+    const endingBalances: number[] = [];
+    let worstPathDepletionAge: number | undefined;
 
-  for (let sim = 0; sim < inputs.simulations; sim++) {
-    const pathResult = runSingleSimulation(inputs, sim);
-    results.push(pathResult);
+    for (let sim = 0; sim < inputs.simulations; sim++) {
+      try {
+        const pathResult = runSingleSimulation(inputs, sim);
+        results.push(pathResult);
     
     if (pathResult.depleted) {
       if (!worstPathDepletionAge || pathResult.depletionAge! < worstPathDepletionAge) {
@@ -22,6 +33,10 @@ export function runMonteCarloSimulation(inputs: RetirementInputs): {
     } else {
       endingBalances.push(pathResult.endingBalance);
     }
+      } catch (error) {
+        console.warn(`Error in simulation ${sim}:`, error);
+        // Continue with other simulations
+      }
   }
 
   const percentiles = calculatePercentiles(endingBalances);
@@ -41,6 +56,10 @@ export function runMonteCarloSimulation(inputs: RetirementInputs): {
   };
 
   return { results, summary };
+  } catch (error) {
+    console.error('Error in Monte Carlo simulation:', error);
+    throw error;
+  }
 }
 
 function runSingleSimulation(inputs: RetirementInputs, simIndex: number): SimulationPathResult {
