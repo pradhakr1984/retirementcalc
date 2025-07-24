@@ -70,7 +70,7 @@ function generateCashflowTable(inputs: RetirementInputs): YearRow[] {
   }
 
   // Retirement phase
-  const initialPortfolio = portfolio;
+  let initialPortfolio = portfolio;
   let withdrawal = inputs.initialWR * portfolio;
   
   for (let age = inputs.retireAge; age <= inputs.planToAge; age++) {
@@ -87,6 +87,7 @@ function generateCashflowTable(inputs: RetirementInputs): YearRow[] {
     }, 0);
 
     // Apply guardrails
+    const withdrawalRate = withdrawal / portfolio;
     if (portfolio < initialPortfolio * 0.8) {
       withdrawal = withdrawal * (1 - inputs.guardrailDrop);
     } else if (portfolio > initialPortfolio * 1.2) {
