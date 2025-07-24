@@ -73,7 +73,7 @@ export default function ChartsPanel() {
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
           <p className="font-medium text-gray-900">Age: {label}</p>
-          {payload.map((entry: { active?: boolean; payload?: Array<{ name: string; value: number; color: string; }>; label?: string; }, index: number) => (
+          {payload.map((entry, index) => (
             <p key={index} style={{ color: entry.color }} className="text-sm">
               {entry.name}: {formatCurrency(entry.value)}
             </p>

@@ -3,8 +3,7 @@ export function generateCorrelatedReturns(
   stdevReturn: number,
   meanInflation: number,
   stdevInflation: number,
-  correlation: number,
-  seed?: number
+  correlation: number
 ): { return: number; inflation: number } {
   // Generate two standard normal random variables
   const z1 = generateNormalRandom();

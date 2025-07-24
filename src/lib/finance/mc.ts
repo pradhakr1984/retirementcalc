@@ -58,8 +58,7 @@ function runSingleSimulation(inputs: RetirementInputs, simIndex: number): Simula
       inputs.stdevReturn,
       inputs.meanInflation,
       inputs.stdevInflation,
-      inputs.corrReturnInflation,
-      inputs.seed ? inputs.seed + simIndex : undefined
+      inputs.corrReturnInflation
     );
 
     portfolio = portfolio * (1 + returnRate);
@@ -87,8 +86,7 @@ function runSingleSimulation(inputs: RetirementInputs, simIndex: number): Simula
       inputs.stdevReturn,
       inputs.meanInflation,
       inputs.stdevInflation,
-      inputs.corrReturnInflation,
-      inputs.seed ? inputs.seed + simIndex : undefined
+      inputs.corrReturnInflation
     );
 
     // Inflate spend
