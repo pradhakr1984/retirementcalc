@@ -21,7 +21,7 @@ export default function InputForm() {
     updateInputs({ [field]: value });
   };
 
-  const handleIncomeChange = (index: number, field: string, value: any) => {
+  const handleIncomeChange = (index: number, field: string, value: string | number) => {
     const newIncomes = [...inputs.incomes];
     newIncomes[index] = { ...newIncomes[index], [field]: value };
     updateInputs({ incomes: newIncomes });
@@ -118,7 +118,7 @@ export default function InputForm() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Annual Spending (today's dollars)
+                Annual Spending (today&apos;s dollars)
               </label>
               <input
                 type="number"

@@ -8,7 +8,7 @@ export default function HomePage() {
           {/* Header */}
           <div className="mb-12">
             <h1 className="text-5xl font-bold text-gray-900 mb-6">
-              Retirement "Enough Number" Calculator
+              Retirement &quot;Enough Number&quot; Calculator
             </h1>
             <p className="text-xl text-gray-600 leading-relaxed">
               Calculate how much you need to retire with confidence. Our Monte Carlo simulation 

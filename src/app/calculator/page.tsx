@@ -26,7 +26,7 @@ export default function CalculatorPage() {
               Retirement Calculator
             </h1>
             <p className="text-gray-600">
-              Enter your information below to calculate your retirement "enough number"
+              Enter your information below to calculate your retirement &quot;enough number&quot;
             </p>
           </div>
 

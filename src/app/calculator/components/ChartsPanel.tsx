@@ -68,12 +68,12 @@ export default function ChartsPanel() {
     { percentile: '95th', value: monteCarlo.percentile95, color: '#8B5CF6' },
   ];
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string; }>; label?: string; }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
           <p className="font-medium text-gray-900">Age: {label}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry: { active?: boolean; payload?: Array<{ name: string; value: number; color: string; }>; label?: string; }, index: number) => (
             <p key={index} style={{ color: entry.color }} className="text-sm">
               {entry.name}: {formatCurrency(entry.value)}
             </p>
